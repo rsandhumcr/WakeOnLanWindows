@@ -40,11 +40,15 @@ def wake_device(device_name: str) -> bool:
     return False
 
 
-def invoke_wakeonlan(pc_name) -> bool:
+def invoke_wakeonlan(pc_name, is_check) -> bool:
     print("Calling device : ", pc_name)
     print("Checking PC current status.")
     ip_address = devices[pc_name]["ip_address"]
     ip_ping_test_ok = ping(ip_address, 3)
+    
+    if is_check:
+        print("Check Mode : ", ip_ping_test_ok)
+        return ip_ping_test_ok
 
     if ip_ping_test_ok:
         print('Device is already on')
@@ -66,4 +70,7 @@ def invoke_wakeonlan(pc_name) -> bool:
 
 if __name__ == '__main__':
     pc_name = sys.argv[1]
-    invoke_wakeonlan(pc_name)
+    is_check = False
+    if len(sys.argv) > 2 :
+        is_check = sys.argv[2] == '-c'
+    invoke_wakeonlan(pc_name, is_check)
